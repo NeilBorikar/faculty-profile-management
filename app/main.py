@@ -47,8 +47,8 @@ async def startup_db_client():
 async def shutdown_db_client():
     await close_mongo_connection()
 
-# Serve uploaded files locally if local storage is selected
-if settings.STORAGE_TYPE == "local" and os.path.exists(settings.UPLOAD_DIR):
+# Serve uploaded files locally
+if os.path.exists(settings.UPLOAD_DIR):
     app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 # Auth / Login Endpoint
