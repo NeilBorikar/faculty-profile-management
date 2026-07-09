@@ -13,7 +13,9 @@ from app.schemas import (
     FacultyProfileResponse,
     StatusUpdate,
     AuthRequest,
-    AuthResponse
+    AuthResponse,
+    RegisterRequest,
+    RegisterResponse
 )
 import app.crud as crud
 from app.storage import get_storage_provider
@@ -87,6 +89,43 @@ async def login(auth: AuthRequest):
         )
     
     raise HTTPException(status_code=400, detail="Invalid role specified")
+
+# Register Endpoint — use via Postman to add a faculty member
+@app.post("/api/auth/register", response_model=RegisterResponse, status_code=201)
+async def register_faculty(data: RegisterRequest):
+    """
+    Register a new faculty member.
+    Use this endpoint via Postman to pre-register faculty before they log in.
+    """
+    email = data.email.strip().lower()
+
+    # Check if a profile with this email already exists
+    existing = await crud.get_profile_by_email(email)
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail=f"A faculty profile with email '{email}' already exists."
+        )
+
+    # Create the new profile in MongoDB
+    new_profile = FacultyProfileCreate(
+        name=data.name,
+        email=email,
+        phone=data.phone,
+        department=data.department,
+        designation=data.designation,
+        joining_date=data.joining_date,
+        bio=data.bio
+    )
+    created = await crud.create_profile(new_profile)
+
+    return RegisterResponse(
+        message=f"Faculty '{data.name}' registered successfully. Status is Pending until Admin approval.",
+        profile_id=created["id"],
+        name=created["name"],
+        email=created["email"],
+        status=created["status"]
+    )
 
 # Profile Endpoints
 @app.post("/api/profiles", response_model=FacultyProfileResponse)

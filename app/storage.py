@@ -16,11 +16,11 @@ class StorageProvider(ABC):
 
 class LocalStorageProvider(StorageProvider):
     async def upload_file(self, file: UploadFile, category: str) -> str:
-        # Create a unique file name
+        
         ext = os.path.splitext(file.filename)[1]
         unique_filename = f"{uuid.uuid4()}{ext}"
         
-        # Determine the target path
+        
         target_dir = os.path.join(settings.UPLOAD_DIR, category)
         os.makedirs(target_dir, exist_ok=True)
         file_path = os.path.join(target_dir, unique_filename)

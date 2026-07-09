@@ -13,7 +13,7 @@ async def test_mongodb_connection():
     print("Checking MongoDB Connection...")
     try:
         from motor.motor_asyncio import AsyncIOMotorClient
-        mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+        mongo_uri = os.getenv("MONGO_URI", "mongodb+srv://neilborikar25_db_user:Neil@2507@cluster0.atfnwuq.mongodb.net/")
         db_name = os.getenv("MONGO_DB_NAME", "faculty_profile_db")
         
         print(f"  - Connecting to URI: {mongo_uri}")

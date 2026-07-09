@@ -55,6 +55,22 @@ class AuthRequest(BaseModel):
     email: str
     role: str = Field(..., description="Must be 'Faculty' or 'Admin'")
 
+class RegisterRequest(BaseModel):
+    name: str = Field(..., min_length=2, description="Full name of the faculty member")
+    email: EmailStr
+    phone: str
+    department: str
+    designation: str
+    joining_date: str = Field(..., description="Date in YYYY-MM-DD format")
+    bio: Optional[str] = ""
+
+class RegisterResponse(BaseModel):
+    message: str
+    profile_id: str
+    name: str
+    email: str
+    status: str
+
 class AuthResponse(BaseModel):
     email: str
     role: str
